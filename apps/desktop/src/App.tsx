@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Mode = "home" | "host" | "supporter";
 type Status = "idle" | "waiting" | "approval" | "connecting" | "connected" | "ended";
-const SIGNAL_URL = import.meta.env.VITE_SIGNAL_URL ?? "ws://localhost:8787";
+const SIGNAL_URL = import.meta.env.VITE_SIGNAL_URL || "ws://localhost:8787";
 const ICE = [{ urls: "stun:stun.l.google.com:19302" }];
 
 export function App() {
