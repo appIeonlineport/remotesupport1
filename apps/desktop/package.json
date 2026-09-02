@@ -1,0 +1,37 @@
+{
+  "name": "@remote/desktop",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"tsc -p tsconfig.main.json --watch --preserveWatchOutput\" \"wait-on tcp:5173 file:dist/main.js && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .\"",
+    "build": "vite build && tsc -p tsconfig.main.json",
+    "test": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.main.json --noEmit",
+    "build:native": "node scripts/build-native.mjs",
+    "package:win": "npm run build && npm run build:native && electron-builder --win nsis",
+    "package:mac": "npm run build && npm run build:native && electron-builder --mac dmg"
+  },
+  "dependencies": { "@vitejs/plugin-react": "^5.0.2", "vite": "^7.1.3", "react": "^19.1.1", "react-dom": "^19.1.1" },
+  "devDependencies": { "@types/node": "^24.3.0", "@types/react": "^19.1.10", "@types/react-dom": "^19.1.7", "concurrently": "^9.2.1", "cross-env": "^10.0.0", "electron": "^37.3.1", "electron-builder": "^26.0.12", "wait-on": "^8.0.4" },
+  "build": {
+    "appId": "com.remotesupport.desktop",
+    "productName": "Remote Support",
+    "asar": true,
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "dist-renderer/**/*", "package.json"],
+    "extraResources": [{ "from": "native/bin", "to": "native", "filter": ["**/*"] }],
+    "win": { "target": "nsis", "artifactName": "Remote-Support-${version}-Setup.${ext}" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.business",
+      "hardenedRuntime": true,
+      "artifactName": "Remote-Support-${version}-${arch}.${ext}",
+      "extendInfo": {
+        "NSScreenCaptureUsageDescription": "Remote Support shares your screen only after you approve a support session.",
+        "NSAccessibilityUsageDescription": "Remote Support uses Accessibility only while you allow remote mouse and keyboard control."
+      }
+    }
+  }
+}

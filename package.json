@@ -1,0 +1,17 @@
+{
+  "name": "remote-support-mvp",
+  "private": true,
+  "version": "0.2.0",
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "concurrently -k -n server,desktop -c cyan,magenta \"npm run dev -w @remote/server\" \"npm run dev -w @remote/desktop\"",
+    "build": "npm run build -w @remote/server && npm run build -w @remote/desktop",
+    "test": "npm run test -w @remote/server && npm run test -w @remote/desktop",
+    "package:win": "npm run package:win -w @remote/desktop",
+    "package:mac": "npm run package:mac -w @remote/desktop"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.2"
+  }
+}
